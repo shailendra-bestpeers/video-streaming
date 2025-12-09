@@ -1,35 +1,36 @@
 import React, { useEffect, useState } from "react";
-import API from "../axios/axios";
+import { useAuth } from "../../context/AuthContext";
+import API from "../../axios/axios";
 import VideoCard from "./VideoCard";
-import { useAuth } from "../context/AuthContext";
 
 interface VideoType {
-  id: string;
+  _id: string;
   title: string;
-  thumbnail: string;
-  videoUrl: string;
-  duration: string;
-  rating: number;
-  views: string;
   description: string;
   genre: string;
-  year: number;
+  thumbnail: string;
+  videoUrl: string;
+  creatorId: string;
+  createdAt: string;
+  updatedAt: string;
 }
 
-const VideoCardGrid: React.FC = () => {
+const VideoGrid: React.FC = () => {
   const [videos, setVideos] = useState<VideoType[]>([]);
   const [loading, setLoading] = useState(true);
 
   const { isLoggedIn } = useAuth();
 
   useEffect(() => {
-    let isMounted = true; // 🛡️ Prevent state update after unmount
+    let isMounted = true;
 
     const fetchVideos = async () => {
       try {
         const res = await API.get("/videos/feed");
+        console.log(res);
+
         if (isMounted) {
-          setVideos(res.data.video);
+          setVideos(res.data.video); // Make sure API returns { video: [...] }
           setLoading(false);
         }
       } catch (err) {
@@ -43,7 +44,7 @@ const VideoCardGrid: React.FC = () => {
     return () => {
       isMounted = false;
     };
-  }, []); // 👈 EMPTY deps → runs ONLY once
+  }, []);
 
   if (loading)
     return (
@@ -57,7 +58,7 @@ const VideoCardGrid: React.FC = () => {
       <div className="max-w-7xl mx-auto mb-8 flex items-center justify-between">
         <div>
           <h2 className="text-3xl font-bold text-white mb-2">Trending Now</h2>
-          <p className="text-gray-400">Most watched videos this week</p>
+          <p className="text-gray-400">Fresh uploads from creators</p>
         </div>
 
         <button className="px-4 py-2 bg-gray-800 text-white rounded-lg hover:bg-gray-700 transition-all">
@@ -65,13 +66,20 @@ const VideoCardGrid: React.FC = () => {
         </button>
       </div>
 
+      {/* Video Grid */}
       <div className="max-w-7xl mx-auto grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
         {videos.map((video) => (
-          <VideoCard key={video.id} {...video} />
+          <VideoCard
+            key={video._id}
+            _id={video._id} // ✅ ADD THIS
+            title={video.title}
+            thumbnail={video.thumbnail}
+            genre={video.genre}
+          />
         ))}
       </div>
     </div>
   );
 };
 
-export default VideoCardGrid;
+export default VideoGrid;

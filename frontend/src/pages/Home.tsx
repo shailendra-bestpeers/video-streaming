@@ -1,10 +1,11 @@
 import HeroSection from "../components/HeroSection"
-import VideoCard from "../components/VideoCard"
+import VideoGrid from "../components/video/VideoGrid"
+
 
 const Home = () => {
   return (<>
     <HeroSection/>
-    <VideoCard/>
+    <VideoGrid/>
     </>
   )
 }

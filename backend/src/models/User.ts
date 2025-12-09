@@ -33,7 +33,7 @@ const userSchema = new Schema<IUserDocument>(
       trim: true,
     },
 
-    password: { type: String, required: true, minlength: 6 },
+    password: { type: String, required: true,},
 
     role: {
       type: String,

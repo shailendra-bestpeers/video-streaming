@@ -22,11 +22,21 @@ export const register = async (
   const { name, email, password, role } = req.body;
 
   try {
+    const avatarUrl = req.file?.path ?? undefined;
+
     const existingUser = await User.findOne({ email });
     if (existingUser)
       return res.status(400).json({ message: "Email already exists" });
 
-    const user = new User({ name, email, password, role });
+    // Create user
+    const user = new User({
+      name,
+      email,
+      password,
+      role,
+      avatar: avatarUrl, 
+    });
+
     await user.save();
 
     const token = generateToken(user);
@@ -34,7 +44,11 @@ export const register = async (
     return res
       .cookie("token", token, cookieOptions)
       .status(201)
-      .json({ token, user: sanitizeUser(user) });
+      .json({
+        message: "User registered successfully",
+        token,
+        user: sanitizeUser(user),
+      });
 
   } catch (error) {
     console.error("Register Error:", error);
@@ -62,7 +76,11 @@ export const login = async (
 
     return res
       .cookie("token", token, cookieOptions)
-      .json({ token, user: sanitizeUser(user) });
+      .json({
+        message: "Login successful",
+        token,
+        user: sanitizeUser(user),
+      });
 
   } catch (error) {
     console.error("Login Error:", error);
@@ -82,7 +100,7 @@ export const getProfile = async (
 
 export const logout = (req: Request, res: Response) => {
   res.clearCookie("token", cookieOptions);
-  return res.json({ message: "Logged out successfully" });
+  return res.status(200).json({ message: "Logged out successfully" });
 };
 
 const sanitizeUser = (user: IUserDocument) => ({
@@ -90,5 +108,5 @@ const sanitizeUser = (user: IUserDocument) => ({
   name: user.name,
   email: user.email,
   role: user.role,
-  avatar: user.avatar,
+  avatar: user.avatar, 
 });

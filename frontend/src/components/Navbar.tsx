@@ -1,14 +1,39 @@
 import { useState } from "react";
+import { navColor } from "../color/color";
+import { useAuth } from "../context/AuthContext";
+import API from "../axios/axios";
+import { NavLink, useNavigate } from "react-router-dom";
 
 const Navbar = () => {
   const [menuOpen, setMenuOpen] = useState(false);
   const [isCreator, setIsCreator] = useState(false);
   const [profileOpen, setProfileOpen] = useState(false);
+  const {user,loading,checkUser} = useAuth();
+  const navigate = useNavigate();
+ const logoutUser = async()=>{
+  try {
+    await API.get("/auth/logout", {
+        withCredentials: true,
+      });
 
-  return (
+     setProfileOpen(false)
+     checkUser();
+ } catch (error) {
+  console.log(error)
+ }
+
+ }
+
+ const creatorPannel = ()=>{
+setIsCreator(true)
+navigate('/creator-upload')
+
+ }
+
+  return loading?"loading":(
     <>
       {/* NAVBAR */}
-      <nav className="w-full px-4 sm:px-6 lg:px-8 py-4 bg-black text-white flex justify-between items-center shadow-lg">
+      <nav style={{background:navColor}} className={`w-full px-4 sm:px-6 lg:px-8 py-4 text-white flex justify-between items-center shadow-lg`}>
         {/* LOGO */}
         <div className="text-xl sm:text-2xl lg:text-3xl font-bold tracking-wide">
           MyStream
@@ -18,9 +43,9 @@ const Navbar = () => {
         <div className="flex items-center gap-6">
           {/* Desktop Menu Items */}
           <div className="hidden md:flex items-center gap-6">
-            <button className="text-base lg:text-lg hover:text-yellow-400 transition-colors">
+            <NavLink to="/" className="text-base lg:text-lg hover:text-yellow-400 transition-colors">
               Home
-            </button>
+            </NavLink>
             <button className="text-base lg:text-lg hover:text-yellow-400 transition-colors">
               About
             </button>
@@ -31,7 +56,7 @@ const Navbar = () => {
             {!isCreator && (
               <button
                 className="px-4 py-2 bg-yellow-500 hover:bg-yellow-400 rounded-lg text-black text-sm lg:text-base font-semibold transition-all"
-                onClick={() => setIsCreator(true)}
+                onClick={creatorPannel}
               >
                 🎬 Become Creator
               </button>
@@ -66,7 +91,7 @@ const Navbar = () => {
             onClick={() => setProfileOpen(true)}
           >
             <img
-              src="https://i.pravatar.cc/50"
+              src={user?.avatar}
               alt="profile"
               className="w-10 h-10 lg:w-12 lg:h-12 rounded-full border-2 border-white shadow-md"
             />
@@ -120,7 +145,7 @@ const Navbar = () => {
               {/* Profile Image */}
               <div className="relative mb-4">
                 <img
-                  src="https://i.pravatar.cc/300"
+                  src={user?.avatar}
                   alt="profile"
                   className="w-20 h-20 sm:w-24 sm:h-24 md:w-28 md:h-28 lg:w-32 lg:h-32 rounded-full border-4 border-yellow-400 shadow-2xl object-cover"
                 />
@@ -130,10 +155,10 @@ const Navbar = () => {
 
               {/* User Info */}
               <h3 className="text-lg sm:text-xl md:text-2xl lg:text-3xl font-bold mb-1 text-center">
-                John Doe
+               {user?.name}
               </h3>
               <p className="text-gray-400 text-xs sm:text-sm md:text-base mb-3 text-center">
-                john.doe@example.com
+                {user?.email}
               </p>
 
               {/* Status Badge */}
@@ -176,7 +201,7 @@ const Navbar = () => {
                 
                 <button
                   className="w-full px-4 sm:px-6 py-2 sm:py-2.5 bg-red-600 hover:bg-red-500 rounded-lg text-white text-sm sm:text-base font-medium transition-all duration-200"
-                  onClick={() => setProfileOpen(false)}
+                  onClick={logoutUser}
                 >
                   Logout
                 </button>
@@ -294,7 +319,7 @@ const Navbar = () => {
                       </div>
                     )}
 
-                    <button className="w-full text-left px-6 py-4 bg-red-600 hover:bg-red-500 rounded-lg text-lg sm:text-xl transition-all duration-200 transform hover:scale-105">
+                    <button className="w-full text-left px-6 py-4 bg-red-600 hover:bg-red-500 rounded-lg text-lg sm:text-xl transition-all duration-200 transform hover:scale-105" onClick={logoutUser} >
                       Logout
                     </button>
                   </div>
@@ -306,17 +331,17 @@ const Navbar = () => {
                     <div className="flex flex-col items-center">
                       {/* Profile Image */}
                       <img
-                        src="https://i.pravatar.cc/150"
+                        src={user?.avatar}
                         alt="profile"
                         className="w-24 h-24 sm:w-32 sm:h-32 rounded-full border-4 border-yellow-400 shadow-xl mb-4"
                       />
 
                       {/* User Info */}
                       <h3 className="text-xl sm:text-2xl font-bold mb-2 text-center">
-                        John Doe
+                        {user?.name}
                       </h3>
                       <p className="text-gray-400 text-sm sm:text-base mb-4 text-center">
-                        john.doe@example.com
+                        {user?.email}
                       </p>
 
                       {/* Status Badge */}

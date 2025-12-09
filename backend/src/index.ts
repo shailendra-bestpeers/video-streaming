@@ -8,6 +8,7 @@ import cookieParser from "cookie-parser";
 import cors from "./config/cors.js";
 import { connectDB } from "./config/db.js";
 import authRouter from "./routes/auth.route.js";
+import videoRoutes from "./routes/video.route.js";
 
 
 const app = express();
@@ -23,6 +24,7 @@ app.get("/", (req, res) => {
 });
 
 app.use("/api/auth", authRouter);
+app.use("/api/videos", videoRoutes);
 
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => console.log(`🚀 Server running http://localhost:${PORT}`));

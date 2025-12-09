@@ -1,7 +1,11 @@
+import HeroSection from "../components/HeroSection"
+import VideoCard from "../components/VideoCard"
 
 const Home = () => {
-  return (
-    <div>Home</div>
+  return (<>
+    <HeroSection/>
+    <VideoCard/>
+    </>
   )
 }
 

@@ -2,6 +2,9 @@
 import { createBrowserRouter } from "react-router-dom";
 import App from "./App";
 import Home from "./pages/Home";
+import Login from "./pages/Login";
+import Signup from "./pages/Signup";
+import CreatorUploadPage from "./pages/CreatorUploadPage";
 
 export default createBrowserRouter([
   {
@@ -9,7 +12,9 @@ export default createBrowserRouter([
     Component: App,
     children: [
       { index: true, Component: Home },
-      // { path: "about", Component: About },
+      { path: "creator-upload", Component: CreatorUploadPage },
+      { path: "login", Component: Login },
+      { path: "signup", Component: Signup },
     ],
   },
 ]);

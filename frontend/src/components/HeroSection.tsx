@@ -2,10 +2,11 @@ import React, { useState, useEffect } from "react";
 import { Play, TrendingUp, Star, ChevronRight, Sparkles } from "lucide-react";
 import { useAuth } from "../context/AuthContext";
 import { Link } from "react-router-dom";
+import { buttonColor } from "../color/color";
 
 const HeroSection: React.FC = () => {
   const [currentSlide, setCurrentSlide] = useState(0);
- const {user,isLoggedIn}= useAuth();
+ const {isLoggedIn}= useAuth();
 
   // Simulated featured content - replace with actual data
   const featuredContent = [
@@ -119,7 +120,7 @@ const HeroSection: React.FC = () => {
           ) : (
             <>
               <Link to="/signup">
-                <button className="flex items-center gap-3 px-8 py-4 bg-gradient-to-r from-red-600 to-purple-600 text-white rounded-xl font-bold text-lg hover:from-red-700 hover:to-purple-700 transition-all shadow-2xl transform hover:scale-105">
+                <button style={{background:buttonColor}} className="flex items-center gap-3 px-8 py-4 text-white rounded-xl font-bold text-lg hover:from-red-700 hover:to-purple-700 transition-all shadow-2xl transform hover:scale-105">
                   <Sparkles className="w-6 h-6" />
                   Start Free Trial
                 </button>

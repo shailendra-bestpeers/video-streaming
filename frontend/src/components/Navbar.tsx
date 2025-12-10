@@ -1,8 +1,9 @@
 import { useState } from "react";
-import { navColor } from "../color/color";
+import { buttonColor, navColor } from "../color/color";
 import { useAuth } from "../context/AuthContext";
 import API from "../axios/axios";
-import { NavLink, useNavigate } from "react-router-dom";
+import { Link, NavLink, useNavigate } from "react-router-dom";
+import {viewerNavbar} from "../../app/data/Navbar/NavbarData"
 
 const Navbar = () => {
   const [menuOpen, setMenuOpen] = useState(false);
@@ -24,11 +25,6 @@ const Navbar = () => {
 
  }
 
- const creatorPannel = ()=>{
-setIsCreator(true)
-navigate('/creator-upload')
-
- }
 
   return loading?"loading":(
     <>
@@ -36,53 +32,28 @@ navigate('/creator-upload')
       <nav style={{background:navColor}} className={`w-full px-4 sm:px-6 lg:px-8 py-4 text-white flex justify-between items-center shadow-lg`}>
         {/* LOGO */}
         <div className="text-xl sm:text-2xl lg:text-3xl font-bold tracking-wide">
-          MyStream
+          {viewerNavbar.logo}
         </div>
 
         {/* Desktop Menu & Profile / Mobile Hamburger */}
         <div className="flex items-center gap-6">
           {/* Desktop Menu Items */}
           <div className="hidden md:flex items-center gap-6">
-            <NavLink to="/" className="text-base lg:text-lg hover:text-yellow-400 transition-colors">
-              Home
+            {viewerNavbar.navbaroption.map((val,i)=>(
+            <NavLink key={i} to={val.location} className="text-base lg:text-lg hover:text-yellow-400 transition-colors">
+              {val.name}
             </NavLink>
-            <button className="text-base lg:text-lg hover:text-yellow-400 transition-colors">
-              About
-            </button>
-            <button className="text-base lg:text-lg hover:text-yellow-400 transition-colors">
-              Settings
-            </button>
-            
-            {!isCreator && (
-              <button
-                className="px-4 py-2 bg-yellow-500 hover:bg-yellow-400 rounded-lg text-black text-sm lg:text-base font-semibold transition-all"
-                onClick={creatorPannel}
+            ))}
+       
+              <Link to="/creator-dashboard"
+              style={{background:buttonColor}}
+                className="px-4 py-2 hover:bg-yellow-400 rounded-lg text-black text-sm lg:text-base font-semibold transition-all"
               >
-                🎬 Become Creator
-              </button>
-            )}
+                🎬 Creator
+              </Link>
+  
 
-            {/* Creator Toggle - Desktop */}
-            {isCreator && (
-              <div className="flex items-center gap-3 px-4 py-2 bg-gray-800 rounded-lg">
-                <span className="text-sm">Viewer</span>
-                <button
-                  onClick={() => setIsCreator(!isCreator)}
-                  className="relative inline-flex items-center h-6 w-12 rounded-full transition-colors"
-                  style={{
-                    backgroundColor: isCreator ? "#facc15" : "#4b5563",
-                  }}
-                >
-                  <span
-                    className="inline-block h-4 w-4 bg-white rounded-full shadow transform transition-transform"
-                    style={{
-                      transform: isCreator ? "translateX(26px)" : "translateX(4px)",
-                    }}
-                  />
-                </button>
-                <span className="text-sm">Creator</span>
-              </div>
-            )}
+         
           </div>
 
           {/* Profile Icon - Desktop Only */}
@@ -279,45 +250,15 @@ navigate('/creator-upload')
                       Help & Support
                     </button>
 
-                    {!isCreator && (
-                      <button
-                        className="w-full text-left px-6 py-4 bg-yellow-600 hover:bg-yellow-500 rounded-lg text-lg sm:text-xl font-semibold transition-all duration-200 transform hover:scale-105"
+              
+                      <Link to="/creator-dashboard"
+                        className="cursor-pointer w-full text-left px-6 py-4 bg-yellow-600 hover:bg-yellow-500 rounded-lg text-lg sm:text-xl font-semibold transition-all duration-200 transform hover:scale-105"
                         onClick={() => setIsCreator(true)}
                       >
                         🎬 Become a Creator
-                      </button>
-                    )}
+                      </Link>
 
-                    {/* TOGGLE SWITCH */}
-                    {isCreator && (
-                      <div className="w-full px-6 py-6 bg-gray-800 rounded-lg">
-                        <div className="flex items-center justify-center sm:justify-start gap-4">
-                          <span className="text-base sm:text-lg font-medium">
-                            Viewer
-                          </span>
-
-                          {/* CUSTOM TOGGLE */}
-                          <button
-                            onClick={() => setIsCreator(!isCreator)}
-                            className="relative inline-flex items-center h-8 w-16 rounded-full transition-colors duration-300 focus:outline-none focus:ring-2 focus:ring-yellow-400 focus:ring-offset-2 focus:ring-offset-gray-900"
-                            style={{
-                              backgroundColor: isCreator ? "#facc15" : "#4b5563",
-                            }}
-                          >
-                            <span
-                              className="inline-block h-6 w-6 transform rounded-full bg-white shadow-lg transition-transform duration-300"
-                              style={{
-                                transform: isCreator ? "translateX(34px)" : "translateX(4px)",
-                              }}
-                            />
-                          </button>
-
-                          <span className="text-base sm:text-lg font-medium">
-                            Creator
-                          </span>
-                        </div>
-                      </div>
-                    )}
+                   
 
                     <button className="w-full text-left px-6 py-4 bg-red-600 hover:bg-red-500 rounded-lg text-lg sm:text-xl transition-all duration-200 transform hover:scale-105" onClick={logoutUser} >
                       Logout

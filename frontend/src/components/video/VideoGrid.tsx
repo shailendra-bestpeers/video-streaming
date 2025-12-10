@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from "react";
-import { useAuth } from "../../context/AuthContext";
 import API from "../../axios/axios";
 import VideoCard from "./VideoCard";
 
@@ -19,7 +18,6 @@ const VideoGrid: React.FC = () => {
   const [videos, setVideos] = useState<VideoType[]>([]);
   const [loading, setLoading] = useState(true);
 
-  const { isLoggedIn } = useAuth();
 
   useEffect(() => {
     let isMounted = true;
@@ -61,16 +59,13 @@ const VideoGrid: React.FC = () => {
           <p className="text-gray-400">Fresh uploads from creators</p>
         </div>
 
-        <button className="px-4 py-2 bg-gray-800 text-white rounded-lg hover:bg-gray-700 transition-all">
-          {isLoggedIn ? "Simulate Logout" : "Simulate Login"}
-        </button>
       </div>
 
       {/* Video Grid */}
       <div className="max-w-7xl mx-auto grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-        {videos.map((video) => (
+        {videos.map((video,i) => (
           <VideoCard
-            key={video._id}
+            key={i}
             _id={video._id} // ✅ ADD THIS
             title={video.title}
             thumbnail={video.thumbnail}

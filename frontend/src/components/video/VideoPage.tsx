@@ -1,5 +1,6 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
+import API from "../../axios/axios";
 
 const VideoPage = () => {
   const { id } = useParams();
@@ -7,8 +8,7 @@ const VideoPage = () => {
 
   useEffect(() => {
     const fetchVideo = async () => {
-      const res = await fetch(`http://localhost:5000/api/videos/${id}`);
-      const data = await res.json();
+      const {data} = await API.get(`/videos/get-video/${id}`);
       setVideo(data);
     };
     fetchVideo();
@@ -21,11 +21,12 @@ const VideoPage = () => {
       <h1 className="text-3xl font-bold mb-4">{video.title}</h1>
 
       <video
-        src={video.videoUrl}
-        className="w-full max-w-4xl rounded-lg shadow-lg"
-        controls
-        autoPlay
-      />
+  src={video.videoUrl}
+  className="w-full max-h-[500px] md:max-h-[400px] lg:max-h-[450px] rounded-lg shadow-lg object-cover"
+  controls
+  autoPlay
+/>
+
 
       <p className="mt-4 text-gray-300">{video.description}</p>
       <p className="mt-2 text-sm text-gray-500">Genre: {video.genre}</p>

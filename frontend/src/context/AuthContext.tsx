@@ -2,7 +2,7 @@ import React, { createContext, useContext, useState, useEffect } from "react";
 import API from "../axios/axios";
 
 interface User {
-  id: string;
+  _id: string;
   name: string;
   email: string;
   role: string;

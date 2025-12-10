@@ -79,3 +79,78 @@ export const getAllVideo = async (
       video: allvideo,
     });
 }
+
+
+export const getVideoById = async (req:Request, res:Response) => {
+  try {
+    const video = await Video.findById(req.params.id);
+
+    if (!video) {
+      return res.status(404).json({ message: "Video not found" });
+    }
+
+    res.json(video);
+  } catch (error) {
+    res.status(500).json({ message: "Server error", error });
+  }
+};
+
+export const getVideoByUserId = async (req:Request, res:Response) => {
+  console.log(req.params.userId)
+  try {
+    const video = await Video.find({creatorId:req.params.userId});
+    console.log(video)
+
+    if (!video) {
+      return res.status(404).json({ message: "Video not found" });
+    }
+
+    res.json(video);
+  } catch (error) {
+    res.status(500).json({ message: "Server error", error });
+  }
+};
+
+
+export const updateVideo = async (req: UploadRequest, res: Response) => {
+  try {
+    const videoId = req.params.id;
+    const { title, description, genre } = req.body;
+
+    const existingVideo = await Video.findById(videoId);
+    if (!existingVideo) {
+      return res.status(404).json({ message: "Video not found" });
+    }
+
+    const getField = (name: string): Express.Multer.File[] | undefined => {
+      if (!req.files || Array.isArray(req.files)) return undefined;
+      return (req.files as { [key: string]: Express.Multer.File[] })[name];
+    };
+
+    const thumbnailArr = getField("thumbnail");
+    const videoArr = getField("video");
+
+    const newThumbnail = thumbnailArr?.[0]?.path;
+    const newVideo = videoArr?.[0]?.path;
+
+    if (title) existingVideo.title = title;
+    if (description) existingVideo.description = description;
+    if (genre) existingVideo.genre = genre;
+
+    if (newThumbnail) existingVideo.thumbnail = newThumbnail;
+    if (newVideo) existingVideo.videoUrl = newVideo;
+
+    await existingVideo.save();
+
+    return res.json({
+      message: "Video updated successfully!",
+      video: existingVideo,
+    });
+
+  } catch (error) {
+    console.error("Update Video Error:", error);
+    return res.status(500).json({ message: "Internal server error" });
+  }
+};
+
+

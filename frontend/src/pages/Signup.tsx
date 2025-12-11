@@ -96,7 +96,7 @@ const Signup: React.FC = () => {
 
       setTimeout(() => {
         window.location.href = role === "creator" ? "/creator-dashboard" : "/";
-      }, 1200);
+      }, 1000);
     } catch (err: any) {
       console.log(err)
       toast.error(

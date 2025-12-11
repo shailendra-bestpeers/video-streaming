@@ -4,6 +4,7 @@ import authMiddleware from "../middlewares/authMiddleware.js";
 import { validate } from "../middlewares/validate.js";
 import { userLoginSchema, userRegisterSchema } from "../schemas/user.validation.js";
 import { upload } from "../config/multer.js";
+import { authorize } from "../middlewares/authorizeMiddleware.js";
 
 const authRouter = express.Router();
 
@@ -24,7 +25,7 @@ authRouter.post(
 
 // ---------------- Private Routes ---------------- //
 
-authRouter.get("/logout", authMiddleware, logout);
-authRouter.get("/profile", authMiddleware, getProfile);
+authRouter.get("/logout", authMiddleware,authorize("admin","creator","viewer"), logout);
+authRouter.get("/profile", authMiddleware,authorize("admin","creator","viewer"), getProfile);
 
 export default authRouter;

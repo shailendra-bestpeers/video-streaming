@@ -1,5 +1,6 @@
 import { Request, Response } from "express";
 import { Video } from "../models/Video.js";
+import mongoose from "mongoose";
 
 type MulterFiles =
   | Express.Multer.File[]
@@ -150,6 +151,34 @@ export const updateVideo = async (req: UploadRequest, res: Response) => {
   } catch (error) {
     console.error("Update Video Error:", error);
     return res.status(500).json({ message: "Internal server error" });
+  }
+};
+
+export const deleteVideo = async (req: Request, res: Response) => {
+  const { id } = req.params;
+
+  try {
+    // Check for valid MongoDB ObjectId
+    if (!mongoose.Types.ObjectId.isValid(id)) {
+      return res.status(400).json({ message: "Invalid video ID" });
+    }
+
+    const video = await Video.findById(id);
+
+    if (!video) {
+      return res.status(404).json({ message: "Video not found" });
+    }
+
+    // Delete video from DB
+    await Video.findByIdAndDelete(id);
+
+    return res.status(200).json({
+      message: "Video deleted successfully",
+      videoId: id,
+    });
+  } catch (error) {
+    console.error("Delete Video Error:", error);
+    return res.status(500).json({ message: "Server error" });
   }
 };
 

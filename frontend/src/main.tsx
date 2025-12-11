@@ -5,6 +5,9 @@ import routes from './routes.ts'
 import { AuthProvider } from './context/AuthContext.tsx'
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import "react-confirm-alert/src/react-confirm-alert.css";
+import "react-loading-skeleton/dist/skeleton.css";
+
 
 createRoot(document.getElementById('root')!).render(
       <AuthProvider>

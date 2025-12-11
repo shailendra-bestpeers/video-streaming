@@ -1,72 +1,47 @@
-import React, { useEffect, useState } from "react";
-import API from "../../axios/axios";
 import VideoCard from "./VideoCard";
-
-interface VideoType {
-  _id: string;
-  title: string;
-  description: string;
-  genre: string;
-  thumbnail: string;
-  videoUrl: string;
-  creatorId: string;
-  createdAt: string;
-  updatedAt: string;
-}
+import { useAuth } from "../../context/AuthContext";
+import SkeletonBox from "../../skeletons/SkeletonBox";
 
 const VideoGrid: React.FC = () => {
-  const [videos, setVideos] = useState<VideoType[]>([]);
-  const [loading, setLoading] = useState(true);
+  const { videos, videoLoading } = useAuth();
 
-
-  useEffect(() => {
-    let isMounted = true;
-
-    const fetchVideos = async () => {
-      try {
-        const res = await API.get("/videos/feed");
-        console.log(res);
-
-        if (isMounted) {
-          setVideos(res.data.video); // Make sure API returns { video: [...] }
-          setLoading(false);
-        }
-      } catch (err) {
-        console.error("Error fetching videos", err);
-        if (isMounted) setLoading(false);
-      }
-    };
-
-    fetchVideos();
-
-    return () => {
-      isMounted = false;
-    };
-  }, []);
-
-  if (loading)
+  if (videoLoading)
     return (
-      <div className="text-white text-center text-2xl py-20">
-        Loading videos...
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+        {Array.from({ length: 6 }).map((_, i) => (
+          <SkeletonBox key={i} height={220} radius={12} />
+        ))}
       </div>
     );
 
   return (
     <div className="min-h-screen bg-black py-12 px-6">
-      <div className="max-w-7xl mx-auto mb-8 flex items-center justify-between">
-        <div>
-          <h2 className="text-3xl font-bold text-white mb-2">Trending Now</h2>
-          <p className="text-gray-400">Fresh uploads from creators</p>
+      {/* Enhanced Header with gradient accent */}
+      <div className="max-w-7xl mx-auto mb-10">
+        <div className="relative">
+          <h2 className="text-4xl font-bold text-white mb-2 flex items-center gap-3">
+            Trending Now
+            <span 
+              className="w-2 h-2 rounded-full animate-pulse"
+              style={{ background: '#dc2626' }}
+            />
+          </h2>
+          <p className="text-gray-400 text-lg">Fresh uploads from creators</p>
+          
+          {/* Decorative gradient line */}
+          <div 
+            className="h-1 w-24 rounded-full mt-4"
+            style={{ background: 'linear-gradient(to right, #4f46e5, #9333ea)' }}
+          />
         </div>
-
       </div>
 
       {/* Video Grid */}
       <div className="max-w-7xl mx-auto grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-        {videos.map((video,i) => (
+        {videos.map((video, i) => (
           <VideoCard
             key={i}
-            _id={video._id} // ✅ ADD THIS
+            _id={video._id}
             title={video.title}
             thumbnail={video.thumbnail}
             genre={video.genre}

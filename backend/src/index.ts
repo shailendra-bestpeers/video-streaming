@@ -9,6 +9,7 @@ import cors from "./config/cors.js";
 import { connectDB } from "./config/db.js";
 import authRouter from "./routes/auth.route.js";
 import videoRoutes from "./routes/video.route.js";
+import userRoutes from "./routes/user.route.js";
 
 
 const app = express();
@@ -20,11 +21,12 @@ app.use(cookieParser());
 app.use(cors);
 
 app.get("/", (req, res) => {
-  res.send("API is working 🚀");
+  res.send("API is working....");
 });
 
 app.use("/api/auth", authRouter);
 app.use("/api/videos", videoRoutes);
+app.use("/api/users", userRoutes);
 
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => console.log(`🚀 Server running http://localhost:${PORT}`));

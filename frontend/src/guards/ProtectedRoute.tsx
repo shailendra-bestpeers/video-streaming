@@ -1,30 +1,28 @@
 import { Navigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
-import type { Permissions, Role } from "../config/permissions";
-import { ROLE_PERMISSIONS } from "../config/roles";
 
 interface ProtectedRouteProps {
+  roles?: string[]; 
   children: React.ReactNode;
-  permissions?: Permissions[];
 }
 
-const ProtectedRoute = ({ children, permissions = [] }: ProtectedRouteProps) => {
-  const { user } = useAuth();
+const ProtectedRoute = ({ roles = [], children }: ProtectedRouteProps) => {
+  const { user, loading } = useAuth();
 
+  if (loading) return <p>Loading...</p>;
+
+  // Not logged in
   if (!user) return <Navigate to="/login" replace />;
 
-  const role = user.role as Role;
+  // If roles array is empty → route is protected but no role restriction
+  if (roles.length === 0) return <>{children}</>;
 
-  // Admin override
-  if (role === "admin") return children;
+  // Check authorization
+  if (!roles.includes(user.role)) {
+    return <Navigate to="/unauthorized" replace />;
+  }
 
-  const userPermissions = ROLE_PERMISSIONS[role]; // <-- NOW typed correctly as Permissions[]
-
-  const allowed = permissions.every((p) => userPermissions.includes(p));
-
-  if (!allowed) return <Navigate to="/unauthorized" replace />;
-
-  return children;
+  return <>{children}</>;
 };
 
 export default ProtectedRoute;

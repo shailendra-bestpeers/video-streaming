@@ -10,6 +10,7 @@ import API from "../axios/axios";
 import { useAuth } from "../context/AuthContext";
 import { toast } from "react-toastify";
 import { buttonColor, iconColor } from "../color/color";
+import { useNavigate } from "react-router-dom";
 
 const Login: React.FC = () => {
   const [form, setForm] = useState({
@@ -20,12 +21,13 @@ const Login: React.FC = () => {
 
   const [loading, setLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
+  const navigate = useNavigate()
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setForm({ ...form, [e.target.name]: e.target.value });
   };
 
-  type Role = "creator" | "viewer";
+  type Role = "creator" | "viewer" | "admin";
 
   const handleSubmit = async () => {
     if (!form.email || !form.password) {
@@ -47,8 +49,14 @@ const Login: React.FC = () => {
       toast.success("Login successful! Redirecting...");
 
       setTimeout(() => {
-        window.location.href = role === "creator" ? "/creator" : "/";
-      }, 1200);
+        if(role==="admin"){
+          navigate("/admin-dashboard")
+        }else if(role==="creator"){
+           navigate("/creator-dashboard")
+        }else{
+           navigate("/")
+        }
+      }, 1000);
 
     } catch (err: any) {
       console.error("Login error:", err);

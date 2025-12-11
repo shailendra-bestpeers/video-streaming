@@ -3,7 +3,6 @@ import { useNavigate, useParams } from "react-router-dom";
 import { useAuth } from "../../context/AuthContext";
 import API from "../../axios/axios";
 import { Upload, Loader2, Film, Image as ImageIcon } from "lucide-react";
-import { buttonColor } from "../../color/color";
 
 const CreatorVideoForm = () => {
   const { id } = useParams(); // <-- If id exists => Edit mode
@@ -156,8 +155,8 @@ const CreatorVideoForm = () => {
 
   // ---------------- UI ----------------
   return (
-    <div className="min-h-screen bg-gradient-to-b from-gray-900 via-gray-850 to-gray-900 p-6 text-white flex justify-center">
-      <button
+    <div className="min-h-screen p-6 text-white flex justify-center">
+      {/* <button
         onClick={() => navigate(-1)}
         style={{ background: buttonColor }}
         className="
@@ -166,46 +165,81 @@ const CreatorVideoForm = () => {
           left-4           
           lg:left-72       
           z-50
-          hover:bg-gray-700 
+          hover:scale-105
+          hover:shadow-2xl
           text-white 
-          px-4 py-2 
-          rounded-lg 
-          shadow-md 
-          transition
+          px-6 py-3
+          rounded-xl
+          shadow-lg 
+          transition-all
+          duration-300
+          font-medium
+          flex
+          items-center
+          gap-2
         "
       >
-        ⬅ Back
-      </button>
-      <div className="bg-gray-850/80 backdrop-blur-lg p-8 w-full max-w-3xl rounded-2xl shadow-2xl border border-gray-700/40">
+        <span className="text-lg">←</span> Back
+      </button> */}
+      
+      <div className="bg-zinc-900 backdrop-blur-lg p-8 w-full max-w-3xl rounded-2xl shadow-2xl border border-zinc-800">
         {/* HEADER */}
-        <h1 className="text-3xl font-extrabold mb-6 flex items-center gap-3">
-          {isEdit ? (
-            <>
-              <Upload className="w-6 h-6 text-yellow-400" />
-              Edit Your Video
-            </>
-          ) : (
-            <>
-              <Upload className="w-6 h-6 text-indigo-400" />
-              Upload New Video
-            </>
-          )}
-        </h1>
+        <div className="mb-8">
+          <h1 className="text-4xl font-extrabold mb-3 flex items-center gap-3">
+            {isEdit ? (
+              <>
+                <div 
+                  className="p-2 rounded-xl"
+                  style={{ background: 'linear-gradient(to bottom right, #4f46e5, #9333ea)' }}
+                >
+                  <Upload className="w-7 h-7 text-white" />
+                </div>
+                <span className="bg-gradient-to-r from-indigo-400 to-purple-400 bg-clip-text text-transparent">
+                  Edit Your Video
+                </span>
+              </>
+            ) : (
+              <>
+                <div 
+                  className="p-2 rounded-xl"
+                  style={{ background: 'linear-gradient(to bottom right, #4f46e5, #9333ea)' }}
+                >
+                  <Upload className="w-7 h-7 text-white" />
+                </div>
+                <span className="bg-gradient-to-r from-indigo-400 to-purple-400 bg-clip-text text-transparent">
+                  Upload New Video
+                </span>
+              </>
+            )}
+          </h1>
+          <div 
+            className="h-1 w-24 rounded-full"
+            style={{ background: 'linear-gradient(to right, #4f46e5, #9333ea)' }}
+          />
+        </div>
 
         {/* SUCCESS MESSAGE */}
         {successMsg && (
-          <p className="mb-4 p-3 bg-green-600/20 border border-green-500 rounded-lg text-sm text-green-300">
-            {successMsg}
-          </p>
+          <div className="mb-6 p-4 bg-green-600/10 border-l-4 rounded-lg text-sm text-green-400 border-green-500">
+            <div className="flex items-center gap-2">
+              <div 
+                className="w-2 h-2 rounded-full"
+                style={{ background: '#10b981' }}
+              />
+              {successMsg}
+            </div>
+          </div>
         )}
 
         {/* FORM */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
           {/* TITLE */}
           <div className="col-span-2">
-            <label className="text-sm text-gray-300">Title {isEdit ? "" : "*"}</label>
+            <label className="text-sm font-semibold text-gray-300 mb-2 block">
+              Title {isEdit ? "" : <span style={{ color: '#dc2626' }}>*</span>}
+            </label>
             <input
-              className="w-full px-4 py-3 mt-1 bg-gray-800/70 border border-gray-700 rounded-xl"
+              className="w-full px-4 py-3 bg-zinc-800 border border-zinc-700 rounded-xl text-white placeholder-gray-500 focus:ring-2 focus:ring-purple-500 focus:border-transparent outline-none transition-all"
               value={title}
               onChange={(e) => onChangeTitle(e.target.value)}
               placeholder="Enter video title"
@@ -214,37 +248,74 @@ const CreatorVideoForm = () => {
 
           {/* THUMBNAIL */}
           <div>
-            <label className="text-sm text-gray-300 flex items-center gap-2">
-              <ImageIcon className="w-4 h-4 text-indigo-300" />
-              Thumbnail {isEdit ? " (optional)" : ""}
+            <label className="text-sm font-semibold text-gray-300 flex items-center gap-2 mb-2">
+              <ImageIcon className="w-4 h-4 text-purple-400" />
+              Thumbnail {isEdit ? " (optional)" : <span style={{ color: '#dc2626' }}>*</span>}
             </label>
 
-            <input className="mt-2 text-xs" type="file" accept="image/*" onChange={handleThumbnail} />
+            <input 
+              className="mt-2 text-sm text-gray-400 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-semibold file:text-white hover:file:scale-105 file:transition-transform file:cursor-pointer" 
+              style={{ 
+                background: 'transparent',
+              }}
+              type="file" 
+              accept="image/*" 
+              onChange={handleThumbnail} 
+            />
 
             {previewThumb && (
-              <img src={previewThumb} className="mt-3 w-full h-32 object-cover rounded-lg border border-gray-700" />
+              <div className="mt-4 relative group">
+                <div 
+                  className="absolute -inset-1 rounded-xl opacity-50 blur-sm group-hover:opacity-75 transition-opacity"
+                  style={{ background: 'linear-gradient(to bottom right, #4f46e5, #9333ea)' }}
+                />
+                <img 
+                  src={previewThumb} 
+                  className="relative w-full h-32 object-cover rounded-xl border border-zinc-700" 
+                />
+              </div>
             )}
           </div>
 
           {/* VIDEO FILE */}
           <div>
-            <label className="text-sm text-gray-300 flex items-center gap-2">
-              <Film className="w-4 h-4 text-indigo-300" />
-              Video File {isEdit ? " (optional)" : ""}
+            <label className="text-sm font-semibold text-gray-300 flex items-center gap-2 mb-2">
+              <Film className="w-4 h-4 text-purple-400" />
+              Video File {isEdit ? " (optional)" : <span style={{ color: '#dc2626' }}>*</span>}
             </label>
 
-            <input className="mt-2 text-xs" type="file" accept="video/*" onChange={handleVideo} />
+            <input 
+              className="mt-2 text-sm text-gray-400 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-semibold file:text-white hover:file:scale-105 file:transition-transform file:cursor-pointer" 
+              style={{ 
+                background: 'transparent',
+              }}
+              type="file" 
+              accept="video/*" 
+              onChange={handleVideo} 
+            />
 
             {previewVideo && (
-              <video src={previewVideo} controls className="mt-3 w-full rounded-lg border border-gray-700" />
+              <div className="mt-4 relative group">
+                <div 
+                  className="absolute -inset-1 rounded-xl opacity-50 blur-sm group-hover:opacity-75 transition-opacity"
+                  style={{ background: 'linear-gradient(to bottom right, #4f46e5, #9333ea)' }}
+                />
+                <video 
+                  src={previewVideo} 
+                  controls 
+                  className="relative w-full rounded-xl border border-zinc-700" 
+                />
+              </div>
             )}
           </div>
 
           {/* GENRE */}
           <div>
-            <label className="text-sm text-gray-300">Genre {isEdit ? "" : "*"}</label>
+            <label className="text-sm font-semibold text-gray-300 mb-2 block">
+              Genre {isEdit ? "" : <span style={{ color: '#dc2626' }}>*</span>}
+            </label>
             <input
-              className="w-full px-4 py-3 mt-1 bg-gray-800/70 border border-gray-700 rounded-xl"
+              className="w-full px-4 py-3 bg-zinc-800 border border-zinc-700 rounded-xl text-white placeholder-gray-500 focus:ring-2 focus:ring-purple-500 focus:border-transparent outline-none transition-all"
               value={genre}
               onChange={(e) => onChangeGenre(e.target.value)}
               placeholder="Action, Drama…"
@@ -253,10 +324,12 @@ const CreatorVideoForm = () => {
 
           {/* DESCRIPTION */}
           <div className="col-span-2">
-            <label className="text-sm text-gray-300">Description {isEdit ? "" : "*"}</label>
+            <label className="text-sm font-semibold text-gray-300 mb-2 block">
+              Description {isEdit ? "" : <span style={{ color: '#dc2626' }}>*</span>}
+            </label>
             <textarea
               rows={4}
-              className="w-full px-4 py-3 mt-1 bg-gray-800/70 border border-gray-700 rounded-xl"
+              className="w-full px-4 py-3 bg-zinc-800 border border-zinc-700 rounded-xl text-white placeholder-gray-500 focus:ring-2 focus:ring-purple-500 focus:border-transparent outline-none transition-all resize-none"
               value={description}
               onChange={(e) => onChangeDescription(e.target.value)}
               placeholder="Write a short description"
@@ -268,10 +341,20 @@ const CreatorVideoForm = () => {
         <button
           onClick={handleSubmit}
           disabled={loading}
-          className="mt-6 w-full py-3.5 bg-indigo-600 hover:bg-indigo-700 rounded-xl flex items-center justify-center gap-2"
+          className="mt-8 w-full py-4 rounded-xl flex items-center justify-center gap-3 text-white font-semibold text-lg shadow-lg hover:shadow-2xl hover:scale-[1.02] transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed"
+          style={{ background: 'linear-gradient(to bottom right, #4f46e5, #9333ea)' }}
         >
-          {loading ? <Loader2 className="w-5 h-5 animate-spin" /> : <Upload className="w-5 h-5" />}
-          {isEdit ? "Save Changes" : "Upload Video"}
+          {loading ? (
+            <>
+              <Loader2 className="w-6 h-6 animate-spin" />
+              Processing...
+            </>
+          ) : (
+            <>
+              <Upload className="w-6 h-6" />
+              {isEdit ? "Save Changes" : "Upload Video"}
+            </>
+          )}
         </button>
       </div>
     </div>
